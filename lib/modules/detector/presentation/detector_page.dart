@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:language_detector/cubit/detector_cubit.dart';
-import 'package:language_detector/cubit/detector_state.dart';
+import 'package:language_detector/modules/detector/presentation/detector_cubit.dart';
+import 'package:language_detector/modules/detector/presentation/detector_state.dart';
 
 class DetectorPage extends StatefulWidget {
   @override
