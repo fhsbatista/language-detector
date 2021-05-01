@@ -25,7 +25,7 @@ void main() {
       final result = await networkInfo.isConnected;
 
       //assert
-      verify(connectivity.checkConnectivity);
+      verify(() => connectivity.checkConnectivity());
       expect(result, isConnected);
     });
   });

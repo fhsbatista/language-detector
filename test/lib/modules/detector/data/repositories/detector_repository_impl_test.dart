@@ -7,22 +7,19 @@ import 'package:language_detector/modules/detector/data/datasources/detector_loc
 import 'package:language_detector/modules/detector/data/datasources/detector_remote_datasource.dart';
 import 'package:language_detector/modules/detector/data/repositories/detector_repository_impl.dart';
 import 'package:language_detector/modules/detector/domain/entities/language.dart';
-import 'package:language_detector/modules/detector/domain/repository/detector_repository.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
-import 'detector_repository_impl_test.mocks.dart';
+class MockDetectorRemoteDatasource extends Mock implements DetectorRemoteDatasource {}
 
-@GenerateMocks([
-  DetectorLocalDatasource,
-  DetectorRemoteDatasource,
-  NetworkInfo,
-])
+class MockDetectorLocalDatasource extends Mock implements DetectorLocalDatasource {}
+
+class MockNetworkInfo extends Mock implements NetworkInfo {}
+
 void main() {
   late MockDetectorRemoteDatasource mockRemoteDatasource;
   late MockDetectorLocalDatasource mockLocalDatasource;
   late MockNetworkInfo mockNetworkInfo;
-  late DetectorRepository repository;
+  late DetectorRepositoryImpl repository;
 
   setUp(() {
     mockRemoteDatasource = MockDetectorRemoteDatasource();
@@ -41,58 +38,58 @@ void main() {
   group('getLanguage', () {
     test('should check if has internet connection', () async {
       //arrange
-      when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-      when(mockRemoteDatasource.getLanguage(any))
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      when(() => mockRemoteDatasource.getLanguage(any()))
           .thenAnswer((_) async => Language(name: 'English'));
 
       //act
       await repository.getLanguage('hello');
 
       //asset
-      verify(mockNetworkInfo.isConnected);
+      verify(() => mockNetworkInfo.isConnected);
     });
   });
 
   group('when there is internet connect', () {
     setUp(() {
-      when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
     });
 
     test('should return remote datasource\'s data when the call succeeds', () async {
       //arrange
-      when(mockRemoteDatasource.getLanguage(languageToDetect))
+      when(() => mockRemoteDatasource.getLanguage(languageToDetect))
           .thenAnswer((_) async => detectedLanguage);
 
       //act
       final result = await repository.getLanguage(languageToDetect);
 
       //assert
-      verify(mockRemoteDatasource.getLanguage(languageToDetect));
+      verify(() => mockRemoteDatasource.getLanguage(languageToDetect));
       expect(result, equals(Right(detectedLanguage)));
     });
 
     test('should cache data locally when the call to remote datasource succeeds', () async {
       //arrange
-      when(mockRemoteDatasource.getLanguage(languageToDetect))
+      when(() => mockRemoteDatasource.getLanguage(languageToDetect))
           .thenAnswer((_) async => detectedLanguage);
 
       //act
       await repository.getLanguage(languageToDetect);
 
       //assert
-      verify(mockRemoteDatasource.getLanguage(languageToDetect));
-      verify(mockLocalDatasource.cacheLanguage(detectedLanguage));
+      verify(() => mockRemoteDatasource.getLanguage(languageToDetect));
+      verify(() => mockLocalDatasource.cacheLanguage(detectedLanguage));
     });
 
     test('should return a server failure when the remote datasource throws an exception', () async {
       //arrange
-      when(mockRemoteDatasource.getLanguage(languageToDetect)).thenThrow(ServerException());
+      when(() => mockRemoteDatasource.getLanguage(languageToDetect)).thenThrow(ServerException());
 
       //act
       final result = await repository.getLanguage(languageToDetect);
 
       //assert
-      verify(mockRemoteDatasource.getLanguage(languageToDetect));
+      verify(() => mockRemoteDatasource.getLanguage(languageToDetect));
       verifyZeroInteractions(mockLocalDatasource);
       expect(result, Left(ServerFailure()));
     });
@@ -101,25 +98,25 @@ void main() {
   group('when there is no internet connection', () {
     final cachedLanguage = Language(name: 'English');
     setUp(() {
-      when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
     });
 
     test('should return the cached detected language', () async {
       //arrange
-      when(mockLocalDatasource.cachedLanguage).thenReturn(cachedLanguage);
+      when(() => mockLocalDatasource.cachedLanguage).thenReturn(cachedLanguage);
 
       //act
       final result = await repository.getLanguage(languageToDetect);
 
       //assert
       verifyZeroInteractions(mockRemoteDatasource);
-      verify(mockLocalDatasource.cachedLanguage);
+      verify(() => mockLocalDatasource.cachedLanguage);
       expect(result, Right(cachedLanguage));
     });
 
     test('should return CacheException when there is no cached data', () async {
       //arrange
-      when(mockLocalDatasource.cachedLanguage).thenThrow(CacheException());
+      when(() => mockLocalDatasource.cachedLanguage).thenThrow(CacheException());
 
       //act
       final result = await repository.getLanguage(languageToDetect);
