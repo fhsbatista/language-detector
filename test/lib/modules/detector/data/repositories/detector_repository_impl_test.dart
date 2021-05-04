@@ -21,6 +21,9 @@ void main() {
   late MockNetworkInfo mockNetworkInfo;
   late DetectorRepositoryImpl repository;
 
+  final languageToDetect = 'hello';
+  final detectedLanguage = Language(name: 'english');
+
   setUp(() {
     mockRemoteDatasource = MockDetectorRemoteDatasource();
     mockLocalDatasource = MockDetectorLocalDatasource();
@@ -30,17 +33,15 @@ void main() {
       localDatasource: mockLocalDatasource,
       remoteDatasource: mockRemoteDatasource,
     );
+    when(() => mockLocalDatasource.cachedLanguage).thenThrow(CacheException());
+    when(() => mockLocalDatasource.cacheLanguage(detectedLanguage)).thenAnswer((_) async => true);
   });
-
-  final languageToDetect = 'hello';
-  final detectedLanguage = Language(name: 'english');
 
   group('getLanguage', () {
     test('should check if has internet connection', () async {
       //arrange
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-      when(() => mockRemoteDatasource.getLanguage(any()))
-          .thenAnswer((_) async => Language(name: 'English'));
+      when(() => mockRemoteDatasource.getLanguage(any())).thenAnswer((_) async => detectedLanguage);
 
       //act
       await repository.getLanguage('hello');
@@ -103,7 +104,7 @@ void main() {
 
     test('should return the cached detected language', () async {
       //arrange
-      when(() => mockLocalDatasource.cachedLanguage).thenReturn(cachedLanguage);
+      when(() => mockLocalDatasource.cachedLanguage).thenAnswer((_) async => cachedLanguage);
 
       //act
       final result = await repository.getLanguage(languageToDetect);

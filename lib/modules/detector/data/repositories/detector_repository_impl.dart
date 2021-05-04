@@ -31,7 +31,8 @@ class DetectorRepositoryImpl implements DetectorRepository {
       }
     } else {
       try {
-        return Right(localDatasource.cachedLanguage);
+        final cachedLanguage = await localDatasource.cachedLanguage;
+        return Right(cachedLanguage);
       } on CacheException {
         return Left(CacheFailure());
       }
