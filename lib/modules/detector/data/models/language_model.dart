@@ -5,11 +5,17 @@ class LanguageModel extends Language {
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
+      'data': {
+        'detections': [
+          {
+            'language': name,
+          }
+        ]
+      },
     };
   }
 
   factory LanguageModel.fromJson(Map<String, dynamic> json) {
-    return LanguageModel(name: json['name']);
+    return LanguageModel(name: (json['data']['detections'] as List).first['language']);
   }
 }

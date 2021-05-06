@@ -1,0 +1,11 @@
+{
+  "data": {
+    "detections": [
+      {
+        "language": "en",
+        "isReliable": true,
+        "confidence": 10.24
+      }
+    ]
+  }
+}

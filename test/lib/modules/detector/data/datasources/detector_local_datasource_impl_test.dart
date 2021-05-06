@@ -20,7 +20,7 @@ void main() {
 
   group('get cached language', () {
     test('should return the cached language', () async {
-      final jsonMap = {'name': 'japanese'};
+      final jsonMap = LanguageModel(name: 'japanese').toJson();
       //arrange
       when(() => sharedPreferences.getString(CACHED_LANGUAGE_KEY)).thenReturn(json.encode(jsonMap));
 

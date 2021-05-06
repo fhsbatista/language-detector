@@ -8,8 +8,8 @@ This project means to be a place where I will test new stuff.
  - [X] BLoC
  - [X] Mocktail
  - [X] Connectivity checking
- - [X] Shared Preferences
+ - [X] Caching remote data using Shared Preferences
+ - [X] Http
  
 ## Topics to implement some day
- - [ ] RESTful APIs consuming
  - [ ] Dependency Injection
