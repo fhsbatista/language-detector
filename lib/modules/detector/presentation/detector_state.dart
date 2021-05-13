@@ -1,32 +1,32 @@
-import 'package:equatable/equatable.dart';
+part of 'detector_bloc.dart';
 
-abstract class DetectorState extends Equatable{}
+abstract class DetectorState extends Equatable {
+  const DetectorState();
+}
 
-class DetectorInitialState extends DetectorState {
+class DetectorEmpty extends DetectorState {
+  @override
+  List<Object> get props => [];
+}
+
+class DetectorLoading extends DetectorState {
   @override
   List<Object?> get props => [];
 }
 
-class DetectorLoadingState extends DetectorState {
-  @override
-  List<Object?> get props => [];
-}
+class DetectorError extends DetectorState {
+  final String msg;
 
-class DetectorErrorState extends DetectorState {
-  final String error;
-
-
-  DetectorErrorState({required this.error});
+  DetectorError(this.msg);
 
   @override
-  List<Object?> get props => [];
-
+  List<Object?> get props => [msg];
 }
 
-class DetectorSuccessState extends DetectorState {
-  final String language;
+class DetectorLoaded extends DetectorState {
+  final Language language;
 
-  DetectorSuccessState({required this.language});
+  DetectorLoaded(this.language);
 
   @override
   List<Object?> get props => [language];
