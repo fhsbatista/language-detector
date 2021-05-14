@@ -10,6 +10,7 @@ This project means to be a place where I will test new stuff.
  - [X] Connectivity checking
  - [X] Caching remote data using Shared Preferences
  - [X] Http
+ - [X] Dependency Injection using GetIt
  
 ## Topics to implement some day
- - [ ] Dependency Injection
+...

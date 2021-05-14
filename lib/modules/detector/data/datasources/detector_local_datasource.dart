@@ -16,7 +16,7 @@ const CACHED_LANGUAGE_KEY = 'CACHED_LANGUAGE_KEY';
 class DetectorLocalDatasourceImpl implements DetectorLocalDatasource {
   final SharedPreferences sharedPreferences;
 
-  DetectorLocalDatasourceImpl(this.sharedPreferences);
+  DetectorLocalDatasourceImpl({required this.sharedPreferences});
 
   @override
   Future<Language> get cachedLanguage async {
