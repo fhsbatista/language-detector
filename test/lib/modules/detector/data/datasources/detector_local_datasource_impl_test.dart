@@ -15,7 +15,7 @@ void main() {
 
   setUp(() {
     sharedPreferences = MockSharedPreferences();
-    datasource = DetectorLocalDatasourceImpl(sharedPreferences);
+    datasource = DetectorLocalDatasourceImpl(sharedPreferences: sharedPreferences);
   });
 
   group('get cached language', () {

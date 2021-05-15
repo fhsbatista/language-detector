@@ -7,6 +7,7 @@ import 'package:language_detector/modules/detector/presentation/detector_page.da
 import 'injection.dart' as di;
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await di.init();
   runApp(MyApp());
 }
@@ -16,11 +17,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Language Detector',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: BlocProvider(
-        create: (_) => DetectorBloc(getLanguageUsecase: getIt()),
+        create: (_) => getIt<DetectorBloc>(),
         child: DetectorPage(),
       ),
     );

@@ -11,7 +11,7 @@ void main() {
 
   setUp(() {
     connectivity = MockConnectivity();
-    networkInfo = NetworkInfoImpl(connectivity);
+    networkInfo = NetworkInfoImpl(connectivity: connectivity);
   });
 
   group('isConnected', () {

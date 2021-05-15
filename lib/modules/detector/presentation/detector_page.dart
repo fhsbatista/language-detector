@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:language_detector/modules/detector/presentation/detector_cubit.dart';
-import 'package:language_detector/modules/detector/presentation/detector_state.dart';
+import 'package:language_detector/modules/detector/presentation/detector_bloc.dart';
 
 class DetectorPage extends StatefulWidget {
   @override
@@ -10,6 +9,17 @@ class DetectorPage extends StatefulWidget {
 
 class _DetectorPageState extends State<DetectorPage> {
   final _fieldController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<DetectorBloc>(context).stream.listen((event) {
+      if (event is ErrorState) {
+        final snackbar = SnackBar(content: Text(event.msg));
+        ScaffoldMessenger.of(context).showSnackBar(snackbar);
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -25,8 +35,8 @@ class _DetectorPageState extends State<DetectorPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: BlocBuilder<DetectorCubit, DetectorState>(
-          builder: (_, state) => Column(
+        child: BlocBuilder<DetectorBloc, DetectorState>(
+          builder: (context, state) => Column(
             children: [
               TextField(
                 decoration: InputDecoration(
@@ -36,43 +46,50 @@ class _DetectorPageState extends State<DetectorPage> {
               const SizedBox(
                 height: 20.0,
               ),
-              Container(
-                height: 50.0,
-                child: ElevatedButton(
-                  onPressed: () {
-                    BlocProvider.of<DetectorCubit>(context).onDetectClick(
-                      _fieldController.text,
+              Builder(
+                builder: (_) {
+                  if (state is LoadingState) {
+                    return CircularProgressIndicator();
+                  } else {
+                    return Container(
+                      height: 50.0,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          BlocProvider.of<DetectorBloc>(context).add(
+                            GetLanguageEvent(_fieldController.text),
+                          );
+                        },
+                        child: Container(
+                          height: 50.0,
+                          width: 100,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0,
+                            vertical: 5.0,
+                          ),
+                          child: Center(
+                            child: state is LoadingState
+                                ? Container(
+                                    height: 20.0,
+                                    width: 20.0,
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : Text(
+                                    'Detect',
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                          ),
+                        ),
+                      ),
                     );
-                  },
-                  child: Container(
-                    height: 50.0,
-                    width: 100,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                      vertical: 5.0,
-                    ),
-                    child: Center(
-                      child: state is DetectorLoadingState
-                          ? Container(
-                              height: 20.0,
-                              width: 20.0,
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white,
-                                ),
-                              ),
-                            )
-                          : Text(
-                              'Detect',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                    ),
-                  ),
-                ),
+                  }
+                },
               ),
               const SizedBox(height: 20),
-              if (state is DetectorSuccessState)
-                Text('The language detected is ${state.language}')
+              if (state is LoadedState) Text('The language detected is ${state.language}')
             ],
           ),
         ),

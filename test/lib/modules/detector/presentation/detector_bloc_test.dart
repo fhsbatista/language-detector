@@ -22,7 +22,7 @@ void main() {
   });
 
   test('initial state should be empty', () {
-    expect(bloc.state, DetectorEmpty());
+    expect(bloc.state, EmptyState());
   });
 
   group('getLanguage', () {
@@ -48,8 +48,8 @@ void main() {
 
       //assert later
       final expected = [
-        DetectorLoading(),
-        DetectorError(SERVER_FAILURE_MESSAGE),
+        LoadingState(),
+        ErrorState(SERVER_FAILURE_MESSAGE),
       ];
       expectLater(bloc.stream, emitsInOrder(expected));
 
@@ -63,8 +63,8 @@ void main() {
 
       //assert later
       final expected = [
-        DetectorLoading(),
-        DetectorLoaded(detectedLanguage),
+        LoadingState(),
+        LoadedState(detectedLanguage),
       ];
       expectLater(bloc.stream, emitsInOrder(expected));
 
@@ -78,8 +78,8 @@ void main() {
 
       //assert later
       final expected = [
-        DetectorLoading(),
-        DetectorError(CACHE_FAILURE_MESSAGE),
+        LoadingState(),
+        ErrorState(CACHE_FAILURE_MESSAGE),
       ];
       expectLater(bloc.stream, emitsInOrder(expected));
 

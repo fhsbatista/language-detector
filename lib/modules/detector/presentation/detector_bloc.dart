@@ -15,19 +15,19 @@ const String CACHE_FAILURE_MESSAGE = 'Cache failed';
 class DetectorBloc extends Bloc<DetectorEvent, DetectorState> {
   final GetLanguageUsecase getLanguageUsecase;
 
-  DetectorBloc({required this.getLanguageUsecase}) : super(DetectorEmpty());
+  DetectorBloc({required this.getLanguageUsecase}) : super(EmptyState());
 
   @override
   Stream<DetectorState> mapEventToState(DetectorEvent event) async* {
     if (event is GetLanguageEvent) {
-      yield DetectorLoading();
+      yield LoadingState();
       final result = await getLanguageUsecase(GetLanguageParams(input: event.text));
       yield* result.fold(
         (failure) async* {
-          yield DetectorError(failure.getErrorMessage());
+          yield ErrorState(failure.getErrorMessage());
         },
         (language) async* {
-          yield DetectorLoaded(language);
+          yield LoadedState(language);
         },
       );
     }

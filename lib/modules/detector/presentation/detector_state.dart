@@ -4,29 +4,29 @@ abstract class DetectorState extends Equatable {
   const DetectorState();
 }
 
-class DetectorEmpty extends DetectorState {
+class EmptyState extends DetectorState {
   @override
   List<Object> get props => [];
 }
 
-class DetectorLoading extends DetectorState {
+class LoadingState extends DetectorState {
   @override
   List<Object?> get props => [];
 }
 
-class DetectorError extends DetectorState {
+class ErrorState extends DetectorState {
   final String msg;
 
-  DetectorError(this.msg);
+  ErrorState(this.msg);
 
   @override
   List<Object?> get props => [msg];
 }
 
-class DetectorLoaded extends DetectorState {
+class LoadedState extends DetectorState {
   final Language language;
 
-  DetectorLoaded(this.language);
+  LoadedState(this.language);
 
   @override
   List<Object?> get props => [language];
