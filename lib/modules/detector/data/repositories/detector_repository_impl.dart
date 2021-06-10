@@ -27,6 +27,8 @@ class DetectorRepositoryImpl implements DetectorRepository {
         localDatasource.cacheLanguage(detectedLanguage);
         return Right(detectedLanguage);
       } on ServerException {
+        ///conseguir passar uma mensagem para o server failure,
+        ///e arrumar a request (tem que colocar o token no header)
         return Left(ServerFailure());
       }
     } else {

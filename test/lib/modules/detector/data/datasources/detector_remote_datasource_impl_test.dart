@@ -61,7 +61,6 @@ void main() {
 
     //assert
     expect(result, expectedLanguage);
-    //fazer teste do 404 agora.
   });
 
   test('should throw a ServerException when the status code is different than 200', () {
@@ -72,6 +71,9 @@ void main() {
     final call = datasource.getLanguage('hello');
 
     //assert
-    expect(() => call, throwsA(isA<ServerException>()));
+    exp ect(() => call, throwsA(isA<ServerException>()));
   });
 }
+
+//colocar padding na stirng
+//lancar erros quando nao acha module, level e clazz

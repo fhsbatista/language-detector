@@ -13,4 +13,7 @@ This project means to be a place where I will test new stuff.
  - [X] Dependency Injection using GetIt
  
 ## Topics to implement some day
+ - [ ] Store keys safely
+ - [ ] Http interceptors
+ - [ ] Dio
 ...
